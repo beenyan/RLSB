@@ -3,5 +3,13 @@ body {
     width: 100vw;
     margin: 0;
     overflow: hidden;
-    color:rgb(160, 160, 160)
+    background: darkcyan;
+}
+canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 8px 8px 8px rgb(102, 102, 102);
+    background-color: gray;
 }

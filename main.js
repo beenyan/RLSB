@@ -15,26 +15,27 @@ class Player{
         this.Getblock();
     }
     Getblock() {
-        let Rand = rand(0,7);
-        this.Block = Block[Rand];
-        this.Blockind = Rand + 1;
-        this.x = Math.floor(screen.x / 2) -1 - (Rand === 6);
+        if (this.N_block === undefined) {
+            let Rand = rand(0,6);
+            this.N_block = Block[Rand];
+            this.N_blockind = Rand + 1;
+        }
+        let Rand = rand(0,6);
+        this.Block = this.N_block;
+        this.Blockind = this.N_blockind;
+        this.x = Math.floor(screen.x / 2) -1 - (this.N_blockind === 6);
         this.y = 1;
+        this.N_block = Block[Rand];
+        this.N_blockind = Rand;
         if (this.touch()) this.lose();
     }
     draw() {
         // 方塊
         let block = this.Block;
-        for (let y = 0 ; y < block.length ; y++) {
-            for (let x = 0 ; x < block[y].length ; x++) {
-                if (block[y][x]) {
-                    let color = Getdraw[block[y][x]];
-                    ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
-                    ctx.fillRect((x + this.x) * screen.span,(y + this.y) * screen.span,screen.span,screen.span);
-                    decoration(y + this.y,x + this.x,color);
-                }
-            }
-        }
+        for (let y = 0 ; y < block.length ; y++) 
+            for (let x = 0 ; x < block[y].length ; x++) 
+                if (block[y][x]) 
+                    decoration(y + this.y,x + this.x, Getdraw[block[y][x]]);
         // 陰影 & 自身邊框
         for (let y = 0 ; y < screen.y ; y++){
             if(this.touch(y + 1,0)){
@@ -82,7 +83,7 @@ class Player{
         }
     }
     transform() {
-        if (this.Blockind === 2) return;
+        if (this.Blockind === 1) return;
         else {
             let orig_block = this.Block;
             let new_block = [];
@@ -130,6 +131,40 @@ class Player{
         init();
     }
 }
+class GUI{
+    constructor(args) {
+        let def = {
+            score: 0,
+            light: [200,-255,-255,160],
+            sqrt: Math.ceil(20),
+            bc: [0,254,254]
+        }
+        Object.assign(def,args);
+        Object.assign(this,def);
+        this.x = 5;
+    }
+    draw(){
+        for (let y = 0 ; y < this.y ; y++)
+            for (let x = 0 ; x < this.x ; x++)
+                decoration(y,x + screen.x,Getdraw[8]);
+        let block = Block[player.N_blockind];
+        for (let y = 0 ; y < 2 ; y++) {
+            if (block[y] === undefined) block[y] = [];
+            for (let x = 0 ; x < 4 ; x++) {
+                if (block[y][x] !== undefined && block[y][x]) decoration(y + 2,x + screen.x,Getdraw[block[y][x]]);
+                else {
+                    ctx.save();
+                    ctx.translate((x + screen.x) * this.span,(y + 2) * this.span)
+                    ctx.clearRect(0, 0, this.span, this.span);
+                    decoration(0,0,[128,128,128,.08])
+                    ctx.restore();
+                }
+                 
+            }
+        }
+    }
+}
+
 let Block = [
     [[0,1,0],[1,1,1]],
     [[2,2],[2,2]],
@@ -139,11 +174,12 @@ let Block = [
     [[6,0,0],[6,6,6]],
     [[7,7,7,7]]
 ]
-let player;
 let screen = {x:12,y:22,span:40};
+let player;
+let Gui = new GUI(screen);
 let map = [];
 let Getdraw = [[64,64,64],[147,112,216],[236,208,50],[255,165,0],[205,92,92],[140,190,0],[30,144,255],[30,220,220],[160,160,160]];
-let ww = screen.x * screen.span;
+let ww = (screen.x + Gui.x)* screen.span;
 let wh = screen.y * screen.span;
 canvas.width = ww;
 canvas.height = wh;
@@ -160,6 +196,10 @@ function init() { // 初始化
     }
     now = +new Date();
     player = new Player();
+    Object.assign(Gui,{
+        score: 0,
+        L: screen.span * screen.x
+    });
     line = SA(map[1]);
 }
 
@@ -181,13 +221,16 @@ function draw() {
     for (let y = 0 ; y < screen.y ; y++) { // 畫方塊
         for (let x = 0 ; x < screen.x ; x++) {
             let color = Getdraw[map[y][x]];
-            ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
-            ctx.fillRect(x * screen.span,y * screen.span,screen.span,screen.span);
             if (map[y][x]) decoration(y,x,color);
+            else {
+                ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+                ctx.fillRect(x * screen.span,y * screen.span,screen.span,screen.span);
+            }
         }
     }
     
     player.draw();
+    Gui.draw();
     if (+new Date() - now >= speed) { // 更新
         update();
         now = +new Date();
@@ -200,6 +243,8 @@ function SA(array) {return JSON.parse(JSON.stringify(array))}
 let light = [250,-160,-250,160]; // 亮度變化
 let sqrt = Math.ceil(Math.sqrt(screen.span) + 1); // 陰影大小
 function decoration(y = 0, x = 0,color){
+    ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${(color[3] === undefined) ?1 :color[3]})`;
+    ctx.fillRect(x * screen.span,y * screen.span,screen.span,screen.span);
     for (let i = 0 ; i < 4 ; i++){
         ctx.save();
         ctx.beginPath();
@@ -210,7 +255,7 @@ function decoration(y = 0, x = 0,color){
         ctx.lineTo(sqrt,sqrt);
         ctx.lineTo(screen.span - sqrt,sqrt);
         ctx.lineTo(screen.span,0);
-        ctx.fillStyle = `rgb(${(255 - color[0]) / 255 * light[i] + color[0]},${(255 - color[1]) / 255 * light[i] + color[1]},${(255 - color[2]) / 255 * light[i] + color[2]})`; // 亮度變化
+        ctx.fillStyle = `rgba(${(255 - color[0]) / 255 * light[i] + color[0]},${(255 - color[1]) / 255 * light[i] + color[1]},${(255 - color[2]) / 255 * light[i] + color[2]},${(color[3] === undefined) ?1 :color[3]})`; // 亮度變化
         ctx.fill();
 
         ctx.closePath();
