@@ -160,7 +160,7 @@ class GUI{
     constructor(args) {
         let def = {
             score: 0,
-            light: [200,-255,-255,160],
+            light: [160,-255,-255,160],
             sqrt: Math.ceil(20),
             bc: [0,254,254]
         }
@@ -194,8 +194,8 @@ class GUI{
         for (let y = 0 ; y < 2 ; y++) {
             for (let x = 0 ; x < 4 ; x++) {
                 ctx.save();
-                ctx.translate((x + screen.x) * this.span,(y + 19) * this.span)
-                if (block !== undefined && block[y][x]) decoration(0,0,Getdraw[block[y][x]])
+                ctx.translate((x + screen.x) * this.span,(y + 19) * this.span);
+                if (block !== undefined && block[y][x]) decoration(0,0,Getdraw[block[y][x]]);
                 else {
                     ctx.clearRect(0, 0, this.span, this.span);
                     decoration(0,0,[50,50,50,.08])
@@ -235,7 +235,7 @@ let screen = {x:12,y:22,span:40};
 let player;
 let Gui = new GUI(screen);
 let map = [];
-let Getdraw = [[64,64,64],[147,112,216],[236,208,50],[255,165,0],[205,92,92],[140,190,0],[30,144,255],[30,220,220],[160,160,160]];
+let Getdraw = [[64,64,64],[145,0,188],[236,208,50],[255,165,0],[205,92,92],[140,190,0],[0,85,254],[30,220,220],[160,160,160]];
 let ww = (screen.x + Gui.x)* screen.span;
 let wh = screen.y * screen.span;
 canvas.width = ww;
@@ -269,8 +269,8 @@ window.addEventListener('keydown', e => {
     if (t === ' ') player.bottom();
     else if (t === 'Shift') player.set();
     move = {
-        y: (t === 'w' || t === 'ArrowUp' || t === 'W') ? -1 : (t === 's' || t === 'ArrowDown' || t === 'S') ? 1 : 0,
-        x: (t === 'a' || t === 'ArrowLeft' || t === 'A') ? -1 : (t === 'd' || t === 'ArrowRight' || t === 'D') ? 1 : 0
+        y: (['w','ArrowUp','W'].includes(t)) ?-1 : (['s','ArrowDown','S'].includes(t)) ?1 :0,
+        x: (['a','ArrowLeft','A'].includes(t)) ?-1 : (['d','ArrowRight','D'].includes(t)) ?1 :0
     }
     if (keydown) {
         player.move();
@@ -281,14 +281,11 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => {
     let t = e.key;
     move = {
-        y: (t === 'w' || t === 'ArrowUp' || t === 'W' || t === 's' || t === 'ArrowDown' || t === 'S') ? 0 : move.y,
-        x: (t === 'a' || t === 'ArrowLeft' || t === 'A' || t === 'd' || t === 'ArrowRight' || t === 'D') ? 0 : move.x
+        y: (['w','ArrowUp','W','s','ArrowDown','S'].includes(t)) ? 0 : move.y,
+        x: (['a','ArrowLeft','A','d','ArrowRight','D'].includes(t)) ? 0 : move.x
     }
     keydown = 1;
 })
-function update() {
-    player.down();
-}
 function draw() {
     ctx.fillStyle = 'gray';
     ctx.fillRect(0,0,ww,wh);
@@ -302,7 +299,6 @@ function draw() {
             }
         }
     }
-    
     player.draw();
     Gui.draw();
     let now_time = +new Date();
@@ -311,7 +307,7 @@ function draw() {
         movetime = +new Date();
     }
     if (now_time - now >= speed) { // 更新
-        update();
+        player.down();
         now = +new Date();
     }
     requestAnimationFrame(draw); 
@@ -319,7 +315,7 @@ function draw() {
 
 function rand(min, max) {return Math.floor(Math.random() * (max - min + 1)) + min} // 隨機整數，含最大值、最小值 
 function SA(array) {return JSON.parse(JSON.stringify(array))}
-let light = [250,-160,-250,160]; // 亮度變化
+let light = [180,-200,-240,120]; // 亮度變化
 let sqrt = Math.ceil(Math.sqrt(screen.span) + 1); // 陰影大小
 function decoration(y = 0, x = 0,color){
     ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${(color[3] === undefined) ?1 :color[3]})`;
