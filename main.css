@@ -11,5 +11,5 @@ canvas {
     top: 50%;
     transform: translate(-50%,-50%);
     box-shadow: 8px 8px 8px rgb(102, 102, 102);
-    background-color: gray;
+    background-color: rgba(146, 146, 146, 0.979);
 }

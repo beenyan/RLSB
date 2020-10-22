@@ -8,7 +8,8 @@ class Player{
     constructor(args) {
         let def = {
             y: 0,
-            x: 0
+            x: 0,
+            tmpset: 0,
         }
         Object.assign(def,args);
         Object.assign(this,def);
@@ -18,24 +19,19 @@ class Player{
         if (this.N_block === undefined) {
             let Rand = rand(0,6);
             this.N_block = Block[Rand];
-            this.N_blockind = Rand + 1;
+            this.N_blockind = Rand;
         }
         let Rand = rand(0,6);
         this.Block = this.N_block;
         this.Blockind = this.N_blockind;
-        this.x = Math.floor(screen.x / 2) -1 - (this.N_blockind === 6);
+        this.x = Math.floor(screen.x / 2) -1 - (this.Blockind === 6);
         this.y = 1;
         this.N_block = Block[Rand];
         this.N_blockind = Rand;
+        this.tmpset = 0;
         if (this.touch()) this.lose();
     }
     draw() {
-        // 方塊
-        let block = this.Block;
-        for (let y = 0 ; y < block.length ; y++) 
-            for (let x = 0 ; x < block[y].length ; x++) 
-                if (block[y][x]) 
-                    decoration(y + this.y,x + this.x, Getdraw[block[y][x]]);
         // 陰影 & 自身邊框
         for (let y = 0 ; y < screen.y ; y++){
             if(this.touch(y + 1,0)){
@@ -43,8 +39,14 @@ class Player{
                 break;
             }
         }
+        // 方塊
+        let block = this.Block;
+        for (let y = 0 ; y < block.length ; y++) 
+            for (let x = 0 ; x < block[y].length ; x++) 
+                if (block[y][x]) 
+                    decoration(y + this.y,x + this.x, Getdraw[block[y][x]]);
     }
-    touch(y1= 0,x1 = 0) {
+    touch(y1 = 0,x1 = 0) {
         while (this.Block === undefined) this.Getblock();
         let block = this.Block;
         for (let y = 0 ; y < block.length ; y++)
@@ -66,16 +68,21 @@ class Player{
         this.score();
     }
     score(){
+        let lines = 0;
         for (let y = screen.y - 2 ; y > 0 ; y--) {
             if (map[y].includes(0)) continue;
             for (let y1 = y ; y1 > 1 ; y1--) {
                 map[y1] = SA(map[y1 - 1]);
                 map[1] = SA(line);
             }y++;
+            lines++;
         }
+        Gui.score += [0,40,100,300,1200][lines];
     }
-    move(y = 0,x = 0) {
-        if (y === 1) this.down();
+    move(y = move.y,x = move.x) {
+        movetime = +new Date();
+        if ((y | x) === 0) return;
+        else if (y === 1) this.down();
         else if (y === -1) this.transform();
         else if (y | x && !this.touch(y,x)) {
             this.y += y;
@@ -83,6 +90,7 @@ class Player{
         }
     }
     transform() {
+        move.y = 0;
         if (this.Blockind === 1) return;
         else {
             let orig_block = this.Block;
@@ -118,7 +126,9 @@ class Player{
                 if (block[y][x]) {
                     let color = Getdraw[block[y][x]];
                     ctx.strokeStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+                    ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},.4)`;
                     ctx.rect((x + this.x) * screen.span,(y + this.y + y1) * screen.span,screen.span,screen.span);
+                    ctx.fillRect((x + this.x) * screen.span,(y + this.y + y1) * screen.span,screen.span,screen.span);
                     ctx.stroke();
                 }
             }
@@ -126,9 +136,24 @@ class Player{
         ctx.restore();
         ctx.closePath();
     }
-    lose(){
+    lose() {
         alert("U lose");
         init();
+    }
+    set() {
+        if (this.tmpset) return;
+        else if (this.tmp_blockind === undefined) {
+            this.tmp_blockind = this.Blockind;
+            this.Getblock();
+            this.tmpset = 1;
+        }
+        else {
+            this.Block = Block[this.tmp_blockind];
+            this.Blockind = [this.tmp_blockind, this.tmp_blockind = this.Blockind][0];
+            this.x = Math.floor(screen.x / 2) -1 - (this.Blockind === 6);
+            this.y = 1;
+            this.tmpset = 1;
+        }
     }
 }
 class GUI{
@@ -143,7 +168,7 @@ class GUI{
         Object.assign(this,def);
         this.x = 5;
     }
-    draw(){
+    draw() {
         for (let y = 0 ; y < this.y ; y++)
             for (let x = 0 ; x < this.x ; x++)
                 decoration(y,x + screen.x,Getdraw[8]);
@@ -151,17 +176,49 @@ class GUI{
         for (let y = 0 ; y < 2 ; y++) {
             if (block[y] === undefined) block[y] = [];
             for (let x = 0 ; x < 4 ; x++) {
-                if (block[y][x] !== undefined && block[y][x]) decoration(y + 2,x + screen.x,Getdraw[block[y][x]]);
+                if (block[y][x] !== undefined && block[y][x]) decoration(y + 1,x + screen.x,Getdraw[block[y][x]]);
                 else {
                     ctx.save();
-                    ctx.translate((x + screen.x) * this.span,(y + 2) * this.span)
+                    ctx.translate((x + screen.x) * this.span,(y + 1) * this.span);
                     ctx.clearRect(0, 0, this.span, this.span);
-                    decoration(0,0,[128,128,128,.08])
+                    decoration(0,0,[50,50,50,.08]);
                     ctx.restore();
                 }
-                 
             }
         }
+        this.tmp();
+        this.sscore();
+    }
+    tmp() {
+        let block = Block[player.tmp_blockind];
+        for (let y = 0 ; y < 2 ; y++) {
+            for (let x = 0 ; x < 4 ; x++) {
+                ctx.save();
+                ctx.translate((x + screen.x) * this.span,(y + 19) * this.span)
+                if (block !== undefined && block[y][x]) decoration(0,0,Getdraw[block[y][x]])
+                else {
+                    ctx.clearRect(0, 0, this.span, this.span);
+                    decoration(0,0,[50,50,50,.08])
+                }
+                ctx.restore();
+            }
+        }
+    }
+    sscore() {
+        ctx.save();
+        // 區塊
+        ctx.translate(this.L,this.span * 5);
+        ctx.fillStyle = 'rgb(96, 226, 225)';
+        ctx.shadowColor = 'rgb(96, 236, 255)';
+        ctx.shadowBlur = 20;
+        ctx.fillRect(0,0,this.span * 4,this.span * 2);
+        // 文字
+        ctx.font = "40px Arial";
+        ctx.fillStyle = 'rgb(0, 50, 255)';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.score, this.span * 4, this.span + 5);
+        ctx.restore();
     }
 }
 
@@ -184,7 +241,9 @@ let wh = screen.y * screen.span;
 canvas.width = ww;
 canvas.height = wh;
 let now;
+let movetime;
 let line = [];
+let move = {x:0,y:0};
 
 function init() { // 初始化
     for (let y = 0 ; y < screen.y ; y++) {
@@ -195,6 +254,7 @@ function init() { // 初始化
         }
     }
     now = +new Date();
+    movetime = +new Date();
     player = new Player();
     Object.assign(Gui,{
         score: 0,
@@ -203,15 +263,26 @@ function init() { // 初始化
     line = SA(map[1]);
 }
 
+let keydown = 1;
 window.addEventListener('keydown', e => {
     let t = e.key;
-    if (t == ' ') player.bottom();
-    player.move(
-        (t === 'w' || t === 'ArrowUp' || t === 'W') ? -1 : (t === 's' || t === 'ArrowDown' || t === 'S') ? 1 : 0,
-        (t === 'a' || t === 'ArrowLeft' || t === 'A') ? -1 : (t === 'd' || t === 'ArrowRight' || t === 'D') ? 1 : 0
-    );
+    if (t === ' ') player.bottom();
+    else if (t === 'Shift') player.set();
+    move = {
+        y: (t === 'w' || t === 'ArrowUp' || t === 'W') ? -1 : (t === 's' || t === 'ArrowDown' || t === 'S') ? 1 : 0,
+        x: (t === 'a' || t === 'ArrowLeft' || t === 'A') ? -1 : (t === 'd' || t === 'ArrowRight' || t === 'D') ? 1 : 0
+    }
+    if (keydown) player.move();
+    keydown = 0;
 })
-
+window.addEventListener('keyup', e => {
+    let t = e.key;
+    move = {
+        y: (t === 'w' || t === 'ArrowUp' || t === 'W' || t === 's' || t === 'ArrowDown' || t === 'S') ? 0 : move.y,
+        x: (t === 'a' || t === 'ArrowLeft' || t === 'A' || t === 'd' || t === 'ArrowRight' || t === 'D') ? 0 : move.x
+    }
+    keydown = 1;
+})
 function update() {
     player.down();
 }
@@ -231,7 +302,12 @@ function draw() {
     
     player.draw();
     Gui.draw();
-    if (+new Date() - now >= speed) { // 更新
+    let now_time = +new Date();
+    if (now_time - movetime >= 60) { // 移動更新
+        player.move();
+        movetime = +new Date();
+    }
+    if (now_time - now >= speed) { // 更新
         update();
         now = +new Date();
     }
@@ -265,4 +341,5 @@ function decoration(y = 0, x = 0,color){
 
 let speed = 1000; // 掉落毫秒數
 init();
+//setInterval(function(){player.move()},70);
 requestAnimationFrame(draw);
