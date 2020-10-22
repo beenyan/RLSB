@@ -272,7 +272,10 @@ window.addEventListener('keydown', e => {
         y: (t === 'w' || t === 'ArrowUp' || t === 'W') ? -1 : (t === 's' || t === 'ArrowDown' || t === 'S') ? 1 : 0,
         x: (t === 'a' || t === 'ArrowLeft' || t === 'A') ? -1 : (t === 'd' || t === 'ArrowRight' || t === 'D') ? 1 : 0
     }
-    if (keydown) player.move();
+    if (keydown) {
+        player.move();
+        movetime += 20;
+    }
     keydown = 0;
 })
 window.addEventListener('keyup', e => {
