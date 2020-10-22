@@ -344,5 +344,4 @@ function decoration(y = 0, x = 0,color){
 
 let speed = 1000; // 掉落毫秒數
 init();
-//setInterval(function(){player.move()},70);
 requestAnimationFrame(draw);
