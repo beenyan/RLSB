@@ -31,6 +31,7 @@ class Player{
                     let color = Getdraw[block[y][x]];
                     ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
                     ctx.fillRect((x + this.x) * screen.span,(y + this.y) * screen.span,screen.span,screen.span);
+                    decoration(y + this.y,x + this.x,color);
                 }
             }
         }
@@ -141,7 +142,7 @@ let Block = [
 let player;
 let screen = {x:12,y:22,span:40};
 let map = [];
-let Getdraw = [[64,64,64],[147,112,216],[255,255,0],[255,165,0],[205,92,92],[144,238,144],[30,144,255],[0,255,255],[128,128,128]];
+let Getdraw = [[64,64,64],[147,112,216],[236,208,50],[255,165,0],[205,92,92],[140,190,0],[30,144,255],[30,220,220],[160,160,160]];
 let ww = screen.x * screen.span;
 let wh = screen.y * screen.span;
 canvas.width = ww;
@@ -182,24 +183,11 @@ function draw() {
             let color = Getdraw[map[y][x]];
             ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
             ctx.fillRect(x * screen.span,y * screen.span,screen.span,screen.span);
-            decoration(y,x,color);
+            if (map[y][x]) decoration(y,x,color);
         }
     }
-    // 格線
-    ctx.beginPath();
+    
     player.draw();
-    for (let x = screen.span ; x < ww ; x += screen.span) {
-        ctx.moveTo(x,0);
-        ctx.lineTo(x,wh);
-    }
-    for (let y = screen.span ; y < wh ; y += screen.span) {
-        ctx.moveTo(0,y);
-        ctx.lineTo(ww,y);
-    }
-    ctx.strokeStyle = 'rgba(255,255,255,.6)';
-    ctx.stroke();
-    ctx.closePath();
-
     if (+new Date() - now >= speed) { // 更新
         update();
         now = +new Date();
@@ -209,30 +197,25 @@ function draw() {
 
 function rand(min, max) {return Math.floor(Math.random() * (max - min + 1)) + min} // 隨機整數，含最大值、最小值 
 function SA(array) {return JSON.parse(JSON.stringify(array))}
+let light = [250,-160,-250,160]; // 亮度變化
+let sqrt = Math.ceil(Math.sqrt(screen.span) + 1); // 陰影大小
 function decoration(y = 0, x = 0,color){
-    let bw = 40;
-    let trsf = {
-        L: 80
-    }
-    let ccolor = [0,0,0];
-    for (let i = 0 ; i < 3 ; i++)
-        ccolor[i] = (255 - color[i]) / 255;
-    ctx.save();
-    let org = {y:y*screen.span,x:x*screen.span}
     for (let i = 0 ; i < 4 ; i++){
+        ctx.save();
         ctx.beginPath();
-        ctx.moveTo(org.x,org.y);
-        ctx.lineTo(org.x + Math.sqrt(bw),org.y + Math.sqrt(bw));
-        ctx.lineTo(org.x + screen.span - Math.sqrt(bw),org.y + Math.sqrt(bw));
-        ctx.lineTo(org.x + screen.span,org.y);
-        ctx.fillStyle = `rgb(${ccolor[0] * trsf.L + color[0]},${ccolor[1] * trsf.L + color[1]},${ccolor[2] * trsf.L + color[2]})`;
-        ctx.fill();
-        ctx.closePath();
-        ctx.rotate(Math.PI / 2);
-        ctx.translate(org.x,-wh);
-    }
 
-    ctx.restore();
+        ctx.translate(screen.span * x + ((i && i < 3) ?screen.span :0),y * screen.span + ((i >= 2) ?screen.span :0));
+        ctx.rotate(Math.PI / 2 * i);
+        ctx.moveTo(0,0);
+        ctx.lineTo(sqrt,sqrt);
+        ctx.lineTo(screen.span - sqrt,sqrt);
+        ctx.lineTo(screen.span,0);
+        ctx.fillStyle = `rgb(${(255 - color[0]) / 255 * light[i] + color[0]},${(255 - color[1]) / 255 * light[i] + color[1]},${(255 - color[2]) / 255 * light[i] + color[2]})`; // 亮度變化
+        ctx.fill();
+
+        ctx.closePath();
+        ctx.restore();
+    }
 }
 
 let speed = 1000; // 掉落毫秒數
