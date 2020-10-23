@@ -244,7 +244,6 @@ let now;
 let movetime;
 let line = [];
 let move = {x:0,y:0};
-
 function init() { // 初始化
     for (let y = 0 ; y < screen.y ; y++) {
         map[y] = [];
