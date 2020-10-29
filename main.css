@@ -1,5 +1,5 @@
 body {
-    height: 100vh;
+    height: 100vh; /* 網頁大小全螢幕 */
     width: 100vw;
     margin: 0;
     overflow: hidden;

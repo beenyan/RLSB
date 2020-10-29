@@ -243,8 +243,10 @@ canvas.height = wh;
 let now;
 let movetime;
 let line = [];
+let startime;
 let move = {x:0,y:0};
 function init() { // 初始化
+    startime = +new Date() / 1000;
     for (let y = 0 ; y < screen.y ; y++) {
         map[y] = [];
         for (let x = 0 ; x < screen.x ; x++) {
@@ -273,7 +275,7 @@ window.addEventListener('keydown', e => {
     }
     if (keydown) {
         player.move();
-        movetime += 20;
+        movetime += 100;
     }
     keydown = 0;
 })
@@ -305,7 +307,7 @@ function draw() {
         player.move();
         movetime = +new Date();
     }
-    if (now_time - now >= speed) { // 更新
+    if (now_time - now >= speed - Math.min(950,8 * (+new Date() / 1000 - startime))) { // 更新
         player.down();
         now = +new Date();
     }
