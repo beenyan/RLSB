@@ -307,7 +307,7 @@ function draw() {
         player.move();
         movetime = +new Date();
     }
-    if (now_time - now >= speed - Math.min(950,8 * (+new Date() / 1000 - startime))) { // 更新
+    if (now_time - now >= speed - Math.min(950,7 * (+new Date() / 1000 - startime))) { // 更新
         player.down();
         now = +new Date();
     }
