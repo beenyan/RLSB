@@ -243,10 +243,10 @@ canvas.height = wh;
 let now;
 let movetime;
 let line = [];
-let startime;
+let startime = 0;
 let move = {x:0,y:0};
 function init() { // 初始化
-    startime = +new Date() / 1000;
+    startime = 0;
     for (let y = 0 ; y < screen.y ; y++) {
         map[y] = [];
         for (let x = 0 ; x < screen.x ; x++) {
@@ -307,7 +307,7 @@ function draw() {
         player.move();
         movetime = +new Date();
     }
-    if (now_time - now >= speed - Math.min(950,7 * (+new Date() / 1000 - startime))) { // 更新
+    if (now_time - now >= speed - Math.min(950,7 * startime)) { // 更新
         player.down();
         now = +new Date();
     }
@@ -340,5 +340,6 @@ function decoration(y = 0, x = 0,color){
 }
 
 let speed = 1000; // 掉落毫秒數
+setInterval(function(){startime++},1000)
 init();
 requestAnimationFrame(draw);
