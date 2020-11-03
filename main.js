@@ -213,7 +213,7 @@ class GUI{
         ctx.shadowBlur = 20;
         ctx.fillRect(0,0,this.span * 4,this.span * 2);
         // 文字
-        ctx.font = "40px Arial";
+        ctx.font = '40px Arial';
         ctx.fillStyle = 'rgb(0, 50, 255)';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
@@ -321,10 +321,10 @@ let sqrt = Math.ceil(Math.sqrt(screen.span) + 1); // 陰影大小
 function decoration(y = 0, x = 0,color){
     ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${(color[3] === undefined) ?1 :color[3]})`;
     ctx.fillRect(x * screen.span,y * screen.span,screen.span,screen.span);
-    for (let i = 0 ; i < 4 ; i++){
+    for (let i = 0 ; i < 4 ; i++) {
         ctx.save();
         ctx.beginPath();
-
+        
         ctx.translate(screen.span * x + ((i && i < 3) ?screen.span :0),y * screen.span + ((i >= 2) ?screen.span :0));
         ctx.rotate(Math.PI / 2 * i);
         ctx.moveTo(0,0);
