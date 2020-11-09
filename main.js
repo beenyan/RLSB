@@ -74,6 +74,8 @@ class Player{
             for (let y1 = y ; y1 > 1 ; y1--) {
                 map[y1] = SA(map[y1 - 1]);
                 map[1] = SA(line);
+                M_dele.currentTime = 0;
+                M_dele.play();
             }y++;
             lines++;
         }
@@ -88,6 +90,7 @@ class Player{
             this.y += y;
             this.x += x;
         }
+        M_move.play();
     }
     transform() {
         move.y = 0;
@@ -112,6 +115,8 @@ class Player{
             if(this.touch(y + 1,0)){
                 this.y += y;
                 this.down();
+                M_bottom.currentTime = 0;
+                M_bottom.play();
                 return;
             }
         }
@@ -146,6 +151,7 @@ class Player{
             this.tmp_blockind = this.Blockind;
             this.Getblock();
             this.tmpset = 1;
+            M_move.play();
         }
         else {
             this.Block = Block[this.tmp_blockind];
@@ -153,6 +159,7 @@ class Player{
             this.x = Math.floor(screen.x / 2) -1 - (this.Blockind === 6);
             this.y = 1;
             this.tmpset = 1;
+            M_move.play();
         }
     }
 }
@@ -221,7 +228,6 @@ class GUI{
         ctx.restore();
     }
 }
-
 let Block = [
     [[0,1,0],[1,1,1]],
     [[2,2],[2,2]],
@@ -245,8 +251,21 @@ let movetime;
 let line = [];
 let startime = 0;
 let move = {x:0,y:0};
+let M_bgm = document.createElement('audio');
+M_bgm.src = 'music/bgm.mp3';
+M_bgm.loop = true;
+document.addEventListener('click',function(){M_bgm.play()});
+let M_move = document.createElement('audio');
+M_move.src = 'music/move.wav';
+M_move.volume = 0.05;
+let M_bottom = document.createElement('audio');
+M_bottom.src = 'music/bottom.wav';
+M_bottom.volume = 0.2;
+let M_dele = new Audio('music/dele.wav');
+
 function init() { // 初始化
     startime = 0;
+    M_bgm.currentTime = 0;
     for (let y = 0 ; y < screen.y ; y++) {
         map[y] = [];
         for (let x = 0 ; x < screen.x ; x++) {
