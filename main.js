@@ -20,8 +20,8 @@ class Pixel {
     move() {
         ctx.fillStyle = 'rgb(64,64,64)';
         ctx.fillRect(this.x, this.y, this.scale, this.scale);
-        this.x -= rand(20, 50) * this.path;
-        this.y += rand(-100, 100);
+        this.x -= rand(40, 50) * this.path;
+        this.y += [rand(-11, -80), rand(80, 100)][rand(0, 1)];
         if (this.x <= Gui.span || this.x + this.scale >= (Gui.screen.x - 1) * Gui.span || this.y <= Gui.span || this.y + this.scale >= (Gui.screen.y - 1) * Gui.span) return true;
         this.draw();
     }
