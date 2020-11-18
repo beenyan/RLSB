@@ -51,8 +51,8 @@ class Player {
         this.tmpset = 0;
         if (this.touch()) this.lose();
     }
-    draw() {
-        if (!draw_player) return;
+    draw(forcibly = true) {
+        if (!start && forcibly) return;
         // 陰影 & 自身邊框
         for (let y = 0; y < Gui.screen.y; y++) {
             if (this.touch(y + 1, 0)) {
@@ -168,9 +168,8 @@ class Player {
         ctx.closePath();
     }
     lose() {
-        draw_player = false;
-        if (start) play_bt.click();
         draw_all = true;
+        if (start) play_bt.click();
         Gui.draw();
         Buttons.forEach(e => e.draw());
         let px = [];
@@ -251,14 +250,10 @@ class Button {
             x: Gui.screen.x * Gui.span,
             y: 0,
             sqrt: 8,
+            w: 4,
+            h: 2,
             onhover: false,
-            hover: {
-                font: '40px Arial',
-                textAlign: 'center',
-                textBaseline: 'middle',
-                color: 'rgb(222,222,222)',
-                bgcolor: 'rgba(0,0,0,0)'
-            }
+            hover: {}
         }
         Object.assign(def, SA(args));
         Object.assign(def.hover, Dele(SA(def), ['x', 'y', 'onhover', 'hover', 'w', 'h', 'name']));
@@ -269,7 +264,6 @@ class Button {
         ctx.save();
         ctx.translate(this.x, this.y);
         if (this.onhover) {
-            canvas.style.cursor = 'pointer';
             ctx.fillStyle = this.hover.bgcolor;
             decoration(0, 0, this.hover.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h, this.sqrt);
             ctx.font = this.hover.font;
@@ -278,7 +272,6 @@ class Button {
             ctx.textBaseline = this.hover.textBaseline;
         }
         else {
-            canvas.style.cursor = '';
             ctx.fillStyle = this.bgcolor;
             decoration(0, 0, this.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h, this.hover.sqrt);
             ctx.font = this.font;
@@ -343,6 +336,20 @@ class GUI {
         this.tmp();
         this.show_score();
         ctx.restore();
+        if (!start && !draw_all) {
+            ctx.save();
+            player.draw(false);
+            ctx.fillStyle = 'rgba(80,80,80,0.9)';
+            ctx.fillRect(this.span, this.span, this.span * (this.screen.x - 2), this.span * (this.screen.y - 2));
+            ctx.font = '110px Arial';
+            ctx.shadowColor = 'rgb(225, 20, 225,0.8)';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = 'rgb(255, 50, 255,0.8)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('S T O P', Gui.screen.x * Gui.span / 2, Gui.screen.y * Gui.span / 2);
+            ctx.restore();
+        }
     }
     tmp() {
         let block = Block[player.tmp_blockind];
@@ -403,8 +410,6 @@ let move = { x: 0, y: 0 };
 let Buttons = [];
 let play_bt = new Button({
     name: 'Start',
-    w: 4,
-    h: 2,
     y: 9 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
@@ -426,7 +431,29 @@ play_bt.click = function () {
     }
     else M_bgm.pause();
 }
-Buttons.push(play_bt);
+let set_bt = new Button({
+    name: 'Control',
+    y: 12 * Gui.span,
+    color: 'rgb(222,222,222)',
+    bgcolor: 'rgb(55,154,255)',
+    sqrt: 11,
+    hover: {
+        bgcolor: 'rgb(0, 102, 205)',
+        color: 'rgb(200,200,200)'
+    }
+})
+let shop_bt = new Button({
+    name: 'Shop',
+    y: 15 * Gui.span,
+    color: 'rgb(222,222,222)',
+    bgcolor: 'rgb(55,154,255)',
+    sqrt: 11,
+    hover: {
+        bgcolor: 'rgb(0, 102, 205)',
+        color: 'rgb(200,200,200)'
+    }
+})
+Buttons.push(play_bt, set_bt, shop_bt);
 // ================Music===================
 let M_bgm = document.createElement('audio');
 M_bgm.src = 'music/bgm.mp3';
@@ -457,7 +484,6 @@ function init() { // 初始化
     Gui.init();
     line = map[1].slice();
 }
-
 let keydown = 1;
 window.addEventListener('keydown', e => {
     if (!start) return;
@@ -484,10 +510,12 @@ window.addEventListener('keyup', e => {
 })
 canvas.addEventListener('mousemove', mouse => {
     let pos = { y: mouse.offsetY, x: mouse.offsetX };
+    if (Buttons.find(e => { if (pos.y >= e.y && pos.x > e.x && pos.y <= e.y + e.h * Gui.span && pos.x <= e.x + e.w * Gui.span) return true }) !== undefined) canvas.style.cursor = 'pointer';
+    else canvas.style.cursor = '';
     Buttons.forEach(e => {
         if (pos.y >= e.y && pos.x > e.x && pos.y <= e.y + e.h * Gui.span && pos.x <= e.x + e.w * Gui.span) e.onhover = true;
         else e.onhover = false;
-    });
+    })
 });
 canvas.addEventListener('click', mouse => {
     let pos = { y: mouse.offsetY, x: mouse.offsetX };
