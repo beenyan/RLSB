@@ -215,6 +215,7 @@ class Player {
             if (px.length) requestAnimationFrame(move);
             else {
                 init();
+                Gui.text = 'L o s e!';
                 if (start) play_bt.click();
                 draw_all = false;
             }
@@ -294,7 +295,8 @@ class GUI {
             sqrt: Math.ceil(20),
             bc: [0, 254, 254],
             span: 40,
-            screen: { x: 12, y: 22 }
+            screen: { x: 12, y: 22 },
+            text: 'S T O P'
         }
         Object.assign(def, args);
         Object.assign(this, def);
@@ -347,7 +349,7 @@ class GUI {
             ctx.fillStyle = 'rgb(255, 50, 255,0.8)';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('S T O P', Gui.screen.x * Gui.span / 2, Gui.screen.y * Gui.span / 2);
+            ctx.fillText(this.text, Gui.screen.x * Gui.span / 2, Gui.screen.y * Gui.span / 2);
             ctx.restore();
         }
     }
