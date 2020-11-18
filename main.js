@@ -215,7 +215,7 @@ class Player {
             if (px.length) requestAnimationFrame(move);
             else {
                 init();
-                Gui.text = 'L o s e!';
+                Gui.text = 'L O S E!';
                 if (start) play_bt.click();
                 draw_all = false;
             }
@@ -423,6 +423,7 @@ let play_bt = new Button({
 });
 play_bt.click = function () {
     start = !start;
+    Gui.text = 'S T O P';
     this.name = (start) ? 'Pause' : 'Start';
     if (start) {
         M_bgm.play();
