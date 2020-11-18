@@ -14,16 +14,14 @@ class Pixel {
         Object.assign(this, def);
     }
     draw() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.scale, this.scale);
+        ctx.putImageData(this.img, this.x, this.y);
     }
     move() {
-        ctx.fillStyle = 'rgb(64,64,64)';
-        ctx.fillRect(this.x, this.y, this.scale, this.scale);
-        this.x -= rand(40, 50) * this.path;
-        this.y += [rand(-11, -80), rand(80, 100)][rand(0, 1)];
-        if (this.x <= Gui.span || this.x + this.scale >= (Gui.screen.x - 1) * Gui.span || this.y <= Gui.span || this.y + this.scale >= (Gui.screen.y - 1) * Gui.span) return true;
-        this.draw();
+        this.x -= this.mx;
+        this.y += this.my;
+        if (this.x + this.scale <= Gui.span || this.y + this.scale <= Gui.span || this.y >= (Gui.screen.y - 1) * Gui.span || this.x >= (Gui.screen.x - 1) * Gui.span) return true;
+        this.mx += this.vx;
+        this.my += this.vy;
     }
 }
 class Player {
@@ -126,10 +124,15 @@ class Player {
                 for (let y = 0; y < orig_block.length; y++)
                     new_block[x].push(orig_block[orig_block.length - y - 1][x]);
             }
-            for (let y = 0; y < new_block.length; y++)
-                for (let x = 0; x < new_block[y].length; x++)
-                    if (new_block[y][x] && map[y + this.y][x + this.x])
-                        return;
+            let x = [0, -1, 1, (this.Blockind == 6) ? -2 : 0].find(e => {
+                for (let y = 0; y < new_block.length; y++)
+                    for (let x = 0; x < new_block[y].length; x++)
+                        if (new_block[y][x] && map[y + this.y][x + this.x + e])
+                            return false;
+                return true;
+            })
+            if (x === undefined) return;
+            player.x += x;
             this.Block = new_block;
         }
     }
@@ -175,27 +178,42 @@ class Player {
         map.forEach((arr, y) => {
             arr.forEach((val, x) => {
                 if (val % 8 === 0) return;
-                let square = ctx.getImageData(span * x, span * y, span, span).data
-                let scale = 12
-                for (let i = 0; i < square.length; i += scale) {
+                let scale = 4;
+                for (let i = 0; i < Math.pow(span / scale, 2); i++) {
+                    let sign = { x: [-1, 1][rand(0, 1)], y: [-1, 1][rand(0, 1)] };
                     px.push(new Pixel({
-                        x: span * x + Math.floor(i / 4) % span,
-                        y: span * y + Math.floor(i / span / 4),
-                        color: `rgb(${square[i]},${square[i + 1]},${square[i + 2]})`,
-                        path: [1, -1][rand(0, 1)],
-                        scale: scale / 4
+                        x: span * x + i * scale % span,
+                        y: span * y + Math.floor(i * scale / span) * scale,
+                        vx: 0.1 * sign.x,
+                        vy: 0.1 * sign.y,
+                        mx: rand(100, 200) / 100 * sign.x,
+                        my: rand(100, 200) / 100 * sign.y,
+                        scale: scale,
+                        img: ctx.getImageData(span * x + i * scale % span, span * y + Math.floor(i * scale / span) * scale, scale, scale),
                     }))
                 }
             })
         })
         px.forEach(e => e.draw());
         function move() {
-            for (let i = 0; i < 1000; i++) {
-                if (px.length === 0) break;
-                let Rand = rand(0, px.length - 1);
-                if (px[Rand].move()) px.splice(Rand, 1);
+            ctx.fillStyle = 'rgb(65,65,65,0.2)';
+            ctx.fillRect(Gui.span, Gui.span, (Gui.screen.x - 2) * Gui.span, (Gui.screen.y - 2) * Gui.span);
+            px.forEach((e, i) => {
+                if (e.move()) {
+                    px.splice(i, 1);
+                    return;
+                }
+                e.draw();
+            })
+            for (let y = 0; y < Gui.screen.y; y++) {
+                decoration(y, 0, [160, 160, 160]);
+                decoration(y, Gui.screen.x - 1, [160, 160, 160]);
             }
-            if (px.length) requestAnimationFrame(move)
+            for (let x = 0; x < Gui.screen.x; x++) {
+                decoration(0, x, [160, 160, 160]);
+                decoration(Gui.screen.y - 1, x, [160, 160, 160]);
+            }
+            if (px.length) requestAnimationFrame(move);
             else {
                 init();
                 if (start) play_bt.click();
@@ -232,6 +250,7 @@ class Button {
             bgcolor: 'rgba(0,0,0,0)',
             x: Gui.screen.x * Gui.span,
             y: 0,
+            sqrt: 8,
             onhover: false,
             hover: {
                 font: '40px Arial',
@@ -252,7 +271,7 @@ class Button {
         if (this.onhover) {
             canvas.style.cursor = 'pointer';
             ctx.fillStyle = this.hover.bgcolor;
-            decoration(0, 0, this.hover.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h);
+            decoration(0, 0, this.hover.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h, this.sqrt);
             ctx.font = this.hover.font;
             ctx.textAlign = this.hover.textAlign;
             ctx.fillStyle = this.hover.color;
@@ -261,7 +280,7 @@ class Button {
         else {
             canvas.style.cursor = '';
             ctx.fillStyle = this.bgcolor;
-            decoration(0, 0, this.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h);
+            decoration(0, 0, this.bgcolor.split(/[()]/)[1].split(',').map(e => { return parseInt(e) }), this.w, this.h, this.hover.sqrt);
             ctx.font = this.font;
             ctx.textAlign = this.textAlign;
             ctx.fillStyle = this.color;
@@ -345,8 +364,6 @@ class GUI {
         // 區塊
         ctx.translate(0, this.span * 5);
         ctx.fillStyle = 'rgb(96, 226, 225)';
-        ctx.shadowColor = 'rgb(96, 236, 255)';
-        ctx.shadowBlur = 20;
         ctx.fillRect(0, 0, this.span * 4, this.span * 2);
         // 文字
         ctx.font = '34px Arial';
@@ -391,6 +408,7 @@ let play_bt = new Button({
     y: 9 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
+    sqrt: 11,
     hover: {
         bgcolor: 'rgb(0, 102, 205)',
         color: 'rgb(200,200,200)'
@@ -501,10 +519,9 @@ function Dele(Obj, Arr) {
 function SA(i) { return JSON.parse(JSON.stringify(i)) };
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min }; // 隨機整數，含最大值、最小值 
 let light = [190, -140, -220, 100]; // 亮度變化
-function decoration(y = 0, x = 0, color, w = 1, h = 1, sq = undefined) {
+function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 8) {
     ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${(color[3] === undefined) ? 1 : color[3]})`;
     let span = Gui.span;
-    let sqrt = (sq === undefined) ? 8 : sq; // 陰影大小
     ctx.fillRect(x * span, y * span, span * w, span * h);
     for (let i = 0; i < 4; i++) {
         ctx.save();
