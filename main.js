@@ -1,5 +1,6 @@
 'use strict';
 /** @type {HTMLCanvasElement} */ // 宣告作業環境
+const content = document.getElementById('content');
 const canvas = document.getElementById('canvas'); // 取得畫布
 const ctx = canvas.getContext('2d'); // 宣告2D畫布
 
@@ -65,7 +66,7 @@ class Player {
         for (let y = 0; y < block.length; y++)
             for (let x = 0; x < block[y].length; x++)
                 if (block[y][x])
-                    decoration(y + this.y, x + this.x, Getdraw[block[y][x]]);
+                    decoration(y + this.y, x + this.x, Getdraw[block[y][x]], 1, 1, Gui.sqrt);
     }
     touch(y1 = 0, x1 = 0) {
         while (this.Block === undefined) this.Getblock();
@@ -188,7 +189,7 @@ class Player {
                         mx: rand(100, 200) / 100 * sign.x,
                         my: rand(100, 200) / 100 * sign.y,
                         scale: scale,
-                        img: ctx.getImageData(span * x + i * scale % span, span * y + Math.floor(i * scale / span) * scale, scale, scale),
+                        img: ctx.getImageData(span * x + i * scale % span, span * y + Math.floor(i * scale / span) * scale, scale, scale)
                     }))
                 }
             })
@@ -205,17 +206,17 @@ class Player {
                 e.draw();
             })
             for (let y = 0; y < Gui.screen.y; y++) {
-                decoration(y, 0, [160, 160, 160]);
-                decoration(y, Gui.screen.x - 1, [160, 160, 160]);
+                decoration(y, 0, [160, 160, 160], 1, 1, Gui.sqrt);
+                decoration(y, Gui.screen.x - 1, [160, 160, 160], 1, 1, Gui.sqrt);
             }
             for (let x = 0; x < Gui.screen.x; x++) {
-                decoration(0, x, [160, 160, 160]);
-                decoration(Gui.screen.y - 1, x, [160, 160, 160]);
+                decoration(0, x, [160, 160, 160], 1, 1, Gui.sqrt);
+                decoration(Gui.screen.y - 1, x, [160, 160, 160], 1, 1, Gui.sqrt);
             }
             if (px.length) requestAnimationFrame(move);
             else {
                 init();
-                Gui.text = 'L O S E!';
+                Gui.text = 'U  LOSE';
                 if (start) play_bt.click();
                 draw_all = false;
             }
@@ -292,11 +293,11 @@ class GUI {
             x: 5,
             y: 22,
             score: 0,
-            sqrt: Math.ceil(20),
+            sqrt: 8,
             bc: [0, 254, 254],
             span: 40,
             screen: { x: 12, y: 22 },
-            text: 'S T O P'
+            text: 'S T O P',
         }
         Object.assign(def, args);
         Object.assign(this, def);
@@ -311,7 +312,7 @@ class GUI {
         for (let y = 0; y < this.screen.y; y++) { // 畫方塊
             for (let x = 0; x < this.screen.x; x++) {
                 let color = Getdraw[map[y][x]];
-                if (map[y][x]) decoration(y, x, color);
+                if (map[y][x]) decoration(y, x, color, 1, 1, this.sqrt);
                 else {
                     ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
                     ctx.fillRect(x * this.span, y * this.span, this.span, this.span);
@@ -323,15 +324,15 @@ class GUI {
         ctx.translate(this.screen.x * this.span, 0);
         for (let y = 0; y < this.y; y++)
             for (let x = 0; x < this.x; x++)
-                decoration(y, x, Getdraw[8]);
+                decoration(y, x, Getdraw[8], 1, 1, this.sqrt);
         let block = Block[player.N_blockind];
         for (let y = 0; y < 2; y++) {
             if (block[y] === undefined) block[y] = [];
             for (let x = 0; x < 4; x++) {
-                if (block[y][x] !== undefined && block[y][x]) decoration(y + 1, x, Getdraw[block[y][x]]);
+                if (block[y][x] !== undefined && block[y][x]) decoration(y + 1, x, Getdraw[block[y][x]], 1, 1, this.sqrt);
                 else {
                     ctx.clearRect(x * this.span, (y + 1) * this.span, this.span, this.span);
-                    decoration(y + 1, x, [50, 50, 50, .08]);
+                    decoration(y + 1, x, [50, 50, 50, .08], 1, 1, this.sqrt);
                 }
             }
         }
@@ -343,7 +344,7 @@ class GUI {
             player.draw(false);
             ctx.fillStyle = 'rgba(80,80,80,0.9)';
             ctx.fillRect(this.span, this.span, this.span * (this.screen.x - 2), this.span * (this.screen.y - 2));
-            ctx.font = '110px Arial';
+            ctx.font = '100px Arial';
             ctx.shadowColor = 'rgb(225, 20, 225,0.8)';
             ctx.shadowBlur = 15;
             ctx.fillStyle = 'rgb(255, 50, 255,0.8)';
@@ -359,10 +360,10 @@ class GUI {
             for (let x = 0; x < 4; x++) {
                 ctx.save();
                 ctx.translate(x * this.span, (y + 19) * this.span);
-                if (block !== undefined && block[y][x]) decoration(0, 0, Getdraw[block[y][x]]);
+                if (block !== undefined && block[y][x]) decoration(0, 0, Getdraw[block[y][x]], 1, 1, this.sqrt);
                 else {
                     ctx.clearRect(0, 0, this.span, this.span);
-                    decoration(0, 0, [50, 50, 50, .08])
+                    decoration(0, 0, [50, 50, 50, .08], 1, 1, this.sqrt)
                 }
                 ctx.restore();
             }
@@ -403,11 +404,16 @@ let ww = (Gui.screen.x + Gui.x) * Gui.span;
 let wh = Gui.screen.y * Gui.span;
 canvas.width = ww;
 canvas.height = wh;
+content.style.height = `${wh}px`;
+content.style.transform = `translate(-${ww / 2}px,-50%)`;
 let now;
 let movetime;
 let line = [];
 let startime = 0;
 let move = { x: 0, y: 0 };
+let keydown = 1;
+let speed = 1000; // 掉落毫秒數
+let light = [190, -140, -220, 100]; // 亮度變化
 // ================Button==================
 let Buttons = [];
 let play_bt = new Button({
@@ -487,7 +493,6 @@ function init() { // 初始化
     Gui.init();
     line = map[1].slice();
 }
-let keydown = 1;
 window.addEventListener('keydown', e => {
     if (!start) return;
     let t = e.key;
@@ -549,8 +554,7 @@ function Dele(Obj, Arr) {
 }
 function SA(i) { return JSON.parse(JSON.stringify(i)) };
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min }; // 隨機整數，含最大值、最小值 
-let light = [190, -140, -220, 100]; // 亮度變化
-function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 8) {
+function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 1) {
     ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${(color[3] === undefined) ? 1 : color[3]})`;
     let span = Gui.span;
     ctx.fillRect(x * span, y * span, span * w, span * h);
@@ -571,8 +575,6 @@ function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 8) {
         ctx.restore();
     }
 }
-
-let speed = 1000; // 掉落毫秒數
 setInterval(e => { if (!start) return; startime++; }, 1000);
 init();
 requestAnimationFrame(draw);

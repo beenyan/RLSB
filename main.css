@@ -1,15 +1,26 @@
 body {
-    height: 100vh; /* 網頁大小全螢幕 */
+    position: relative;
+    height: 100vh;
     width: 100vw;
     margin: 0;
     overflow: hidden;
     background: darkslategrey;
 }
-canvas {
+#canvas,#content{
     position: relative;
+    display: inline-block;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+    vertical-align: top;
+}
+#canvas {
     box-shadow: 8px 8px 12px rgb(26, 26, 26);
-    background-color: rgba(146, 146, 146, 0.979);
+    background-color: rgb(146, 146, 146);
+}
+#content {
+    box-sizing: border-box;
+    padding: 50px;
+    width: 550px;
+    background-color: white;
 }
