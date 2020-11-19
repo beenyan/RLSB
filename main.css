@@ -6,21 +6,73 @@ body {
     overflow: hidden;
     background: darkslategrey;
 }
-#canvas,#content{
+
+#canvas, #content {
     position: relative;
     display: inline-block;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-60%, -50%);
     vertical-align: top;
 }
+
 #canvas {
     box-shadow: 8px 8px 12px rgb(26, 26, 26);
     background-color: rgb(146, 146, 146);
 }
+
+#version {
+    display: block;
+    margin: 10px 10px 0 0;
+    text-align: right;
+    color: gray;
+}
+
 #content {
     box-sizing: border-box;
-    padding: 50px;
-    width: 550px;
-    background-color: white;
+    padding: 0 40px 40px 40px;
+    width: 450px;
+    visibility: hidden;
+    background-color: rgb(250, 250, 250);
+}
+
+h1 {
+    text-align: center;
+    font-size: 30px;
+    font-family: 'Tahoma';
+    letter-spacing: 2px;
+}
+
+h2 {
+    margin-bottom: 10px;
+    position: relative;
+    font-family: sans-serif;
+}
+
+min {
+    position: absolute;
+    font-family: arial;
+    bottom: 0;
+    text-align: bottom;
+    font-size: 17px;
+    color: gray;
+    right: 0;
+}
+
+ul {
+    margin: 0;
+}
+
+li {
+    position: relative;
+    margin-left: 15px;
+    margin-top: 5px;
+    font-size: 20px;
+}
+
+li span {
+    font-family: 'Arial';
+    position: relative;
+    font-size: 18px;
+    left: -5px;
 }

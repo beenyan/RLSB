@@ -178,7 +178,7 @@ class Player {
         map.forEach((arr, y) => {
             arr.forEach((val, x) => {
                 if (val % 8 === 0) return;
-                let scale = 4;
+                let scale = 3;
                 for (let i = 0; i < Math.pow(span / scale, 2); i++) {
                     let sign = { x: [-1, 1][rand(0, 1)], y: [-1, 1][rand(0, 1)] };
                     px.push(new Pixel({
@@ -244,7 +244,7 @@ class Player {
 class Button {
     constructor(args) {
         let def = {
-            font: '40px Arial',
+            font: '28px Arial',
             textAlign: 'center',
             textBaseline: 'middle',
             color: 'rgb(222,222,222)',
@@ -295,7 +295,7 @@ class GUI {
             score: 0,
             sqrt: 8,
             bc: [0, 254, 254],
-            span: 40,
+            span: 30,
             screen: { x: 12, y: 22 },
             text: 'S T O P',
         }
@@ -344,7 +344,7 @@ class GUI {
             player.draw(false);
             ctx.fillStyle = 'rgba(80,80,80,0.9)';
             ctx.fillRect(this.span, this.span, this.span * (this.screen.x - 2), this.span * (this.screen.y - 2));
-            ctx.font = '100px Arial';
+            ctx.font = '75px Arial';
             ctx.shadowColor = 'rgb(225, 20, 225,0.8)';
             ctx.shadowBlur = 15;
             ctx.fillStyle = 'rgb(255, 50, 255,0.8)';
@@ -372,11 +372,11 @@ class GUI {
     show_score() {
         ctx.save();
         // 區塊
-        ctx.translate(0, this.span * 5);
+        ctx.translate(0, this.span * 4);
         ctx.fillStyle = 'rgb(96, 226, 225)';
         ctx.fillRect(0, 0, this.span * 4, this.span * 2);
         // 文字
-        ctx.font = '34px Arial';
+        ctx.font = '26px Arial';
         ctx.fillStyle = 'rgb(0, 50, 255)';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
@@ -399,13 +399,13 @@ let Gui = new GUI();
 let start = false;
 let draw_all = false;
 let draw_player = false;
-let Getdraw = [[64, 64, 64], [145, 0, 188], [236, 208, 50], [255, 165, 0], [205, 92, 92], [140, 190, 0], [0, 85, 254], [30, 220, 220], [160, 160, 160]];
+let Getdraw = [[64, 64, 64], [145, 0, 188], [220, 190, 25], [255, 165, 0], [255, 80, 80], [140, 190, 0], [0, 85, 254], [30, 220, 220], [160, 160, 160]];
 let ww = (Gui.screen.x + Gui.x) * Gui.span;
 let wh = Gui.screen.y * Gui.span;
 canvas.width = ww;
 canvas.height = wh;
 content.style.height = `${wh}px`;
-content.style.transform = `translate(-${ww / 2}px,-50%)`;
+content.style.transform = `translate(-${ww * 0.6}px,-50%)`;
 let now;
 let movetime;
 let line = [];
@@ -418,7 +418,7 @@ let light = [190, -140, -220, 100]; // 亮度變化
 let Buttons = [];
 let play_bt = new Button({
     name: 'Start',
-    y: 9 * Gui.span,
+    y: 7 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
     sqrt: 11,
@@ -440,9 +440,20 @@ play_bt.click = function () {
     }
     else M_bgm.pause();
 }
+let inform_bt = new Button({
+    name: 'Inform',
+    y: 10 * Gui.span,
+    color: 'rgb(222,222,222)',
+    bgcolor: 'rgb(55,154,255)',
+    sqrt: 11,
+    hover: {
+        bgcolor: 'rgb(0, 102, 205)',
+        color: 'rgb(200,200,200)'
+    }
+});
 let set_bt = new Button({
     name: 'Control',
-    y: 12 * Gui.span,
+    y: 13 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
     sqrt: 11,
@@ -453,7 +464,7 @@ let set_bt = new Button({
 })
 let shop_bt = new Button({
     name: 'Shop',
-    y: 15 * Gui.span,
+    y: 16 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
     sqrt: 11,
@@ -462,7 +473,7 @@ let shop_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 })
-Buttons.push(play_bt, set_bt, shop_bt);
+Buttons.push(play_bt, inform_bt, set_bt, shop_bt);
 // ================Music===================
 let M_bgm = document.createElement('audio');
 M_bgm.src = 'music/bgm.mp3';
