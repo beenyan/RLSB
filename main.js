@@ -152,7 +152,7 @@ class Player {
         let block = this.Block;
         ctx.beginPath();
         ctx.save();
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         for (let y = 0; y < block.length; y++) {
             for (let x = 0; x < block[y].length; x++) {
                 if (block[y][x]) {
