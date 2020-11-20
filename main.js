@@ -3,7 +3,6 @@
 const content = document.getElementById('content');
 const canvas = document.getElementById('canvas'); // 取得畫布
 const ctx = canvas.getContext('2d'); // 宣告2D畫布
-
 // 物件導向
 class Pixel {
     constructor(args) {
@@ -293,7 +292,7 @@ class GUI {
             x: 5,
             y: 22,
             score: 0,
-            sqrt: 8,
+            sqrt: 7,
             bc: [0, 254, 254],
             span: 30,
             screen: { x: 12, y: 22 },
@@ -380,7 +379,7 @@ class GUI {
         ctx.fillStyle = 'rgb(0, 50, 255)';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
-        ctx.fillText('分:' + this.score.toString().padStart(6, '0'), this.span * 4, this.span + 5);
+        ctx.fillText(this.score.toString().padStart(8, '0'), this.span * 4, this.span + 3);
         ctx.restore();
     }
 }
@@ -441,7 +440,7 @@ play_bt.click = function () {
     else M_bgm.pause();
 }
 let inform_bt = new Button({
-    name: 'Inform',
+    name: 'Update',
     y: 10 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
@@ -589,3 +588,13 @@ function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 1) {
 setInterval(e => { if (!start) return; startime++; }, 1000);
 init();
 requestAnimationFrame(draw);
+let asd
+// html
+document.querySelectorAll('input[type=range]').forEach(Element => {
+    Element.addEventListener('mousemove', e => { range(Element) });
+    Element.addEventListener('mousedown', e => { Element.setAttribute('focus', 'true'); range(); });
+    Element.addEventListener('mouseup', e => { Element.setAttribute('focus', 'false') });
+})
+function range(e) {
+
+}

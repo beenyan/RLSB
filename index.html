@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" oncontextmenu="return false">
 
 <head>
     <title>俄羅斯方塊</title>
@@ -10,8 +10,8 @@
 <body>
     <canvas id="canvas"></canvas>
     <div id="content">
-        <div id="Information">
-            <top id="version">Version：1.0.0</top>
+        <top id="top">Version：1.0.0</top>
+        <div id="Update">
             <h1>RECENT&nbsp;&nbsp;UPDATES</h1>
             <div class="update_block">
                 <h2>Update 1.0.0&nbsp;&nbsp;
@@ -28,12 +28,32 @@
                 </ul>
             </div>
         </div>
+
         <div id="Control">
-
+            <h1>GAME&nbsp;&nbsp;SETTINGS</h1>
+            <div class="control_list">
+                <h2 class="key">Master Volume</h2>
+                <input type="range" focus="false" min="0" max="100"
+                    style="::-webkit-slider-runnable-track{background-color: red;}">
+            </div>
+            <div class="control_list">
+                <h2 class="key">BackGround Music</h2>
+                <input type="range" focus="false" min="0" max="100">
+            </div>
+            <div class="control_list">
+                <h2 class="key">Sound Effect</h2>
+                <input type="range" focus="false" min="0" max="100">
+            </div>
         </div>
+
         <div id="Shop">
-
+            <h1>GAME&nbsp;&nbsp;STORES</h1>
         </div>
+        <bottom>©
+            <span id="year"></span>
+            <a href="https://github.com/beenyan?tab=repositories">聖冰如焰</a> All Rights Reserved.
+        </bottom>
+        <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
     </div>
     <script src="main.js"></script>
 </body>
