@@ -588,13 +588,15 @@ function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 1) {
 setInterval(e => { if (!start) return; startime++; }, 1000);
 init();
 requestAnimationFrame(draw);
-let asd
-// html
-document.querySelectorAll('input[type=range]').forEach(Element => {
-    Element.addEventListener('mousemove', e => { range(Element) });
-    Element.addEventListener('mousedown', e => { Element.setAttribute('focus', 'true'); range(); });
-    Element.addEventListener('mouseup', e => { Element.setAttribute('focus', 'false') });
-})
-function range(e) {
 
-}
+// HTML
+$('input[type=range]').rangeslider({
+    name: 'Master_Volume',
+    polyfill: false,
+    onSlide: (self, val, pos) => {
+        //console.log(pos);
+    },
+    onSlideEnd: (self, val, pos) => {
+        // self.$show[0].style['visibility'] = 'hidden'
+    }
+});
