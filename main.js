@@ -451,7 +451,8 @@ let Update_bt = new Button({
     }
 });
 Update_bt.click = () => {
-    document.getElementById('Update').style.opacity = 1;
+    $('.show:not(#Update)').attr('show', 'false');
+    document.getElementById('Update').setAttribute('show', 'true');
 }
 let Control_bt = new Button({
     name: 'Control',
@@ -465,9 +466,10 @@ let Control_bt = new Button({
     }
 })
 Control_bt.click = () => {
-    document.getElementById('Control').style.opacity = 1;
+    $('.show:not(#Control)').attr('show', 'false');
+    document.getElementById('Control').setAttribute('show', 'true');
 }
-let shop_bt = new Button({
+let Shop_bt = new Button({
     name: 'Shop',
     y: 16 * Gui.span,
     color: 'rgb(222,222,222)',
@@ -478,7 +480,11 @@ let shop_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 })
-Buttons.push(play_bt, Update_bt, Control_bt, shop_bt);
+Shop_bt.click = () => {
+    $('.show:not(#Shop)').attr('show', 'false');
+    document.getElementById('Shop').setAttribute('show', 'true');
+}
+Buttons.push(play_bt, Update_bt, Control_bt, Shop_bt);
 // ================Music===================
 let M_bgm = document.createElement('audio');
 M_bgm.src = 'music/bgm.mp3';
