@@ -276,6 +276,8 @@
                 return;
             }
 
+            localStorage.setItem(this.getAttribute('key'), e.target.value);
+
             let value = e.target.value,
                 pos = _this.getPositionFromValue(value);
             _this.setPosition(pos);

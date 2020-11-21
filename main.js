@@ -1,4 +1,18 @@
 'use strict';
+// HTML
+$('input[type=range]').rangeslider({
+    polyfill: false,
+    onSlide: (self, val, pos) => {
+        let key = self.$element[0].getAttribute('key');
+        localStorage.setItem(key, val);
+        Musics[key].forEach(e => {
+            e.volume = val / 100;
+        })
+    }
+});
+
+// Canvas
+
 /** @type {HTMLCanvasElement} */ // 宣告作業環境
 const content = document.getElementById('content');
 const canvas = document.getElementById('canvas'); // 取得畫布
@@ -29,7 +43,8 @@ class Player {
         let def = {
             y: 0,
             x: 0,
-            tmpset: 0
+            tmpset: 0,
+            speed: 1000
         }
         Object.assign(def, args);
         Object.assign(this, def);
@@ -100,6 +115,7 @@ class Player {
             } y++;
             lines++;
         }
+        this.speed = Math.max(130, this.speed - lines * 11);
         Gui.score += [0, 40, 100, 300, 1200][lines];
     }
     move(y = move.y, x = move.x) {
@@ -408,15 +424,13 @@ content.style.transform = `translate(-${ww * 0.6}px,-50%)`;
 let now;
 let movetime;
 let line = [];
-let startime = 0;
 let move = { x: 0, y: 0 };
 let keydown = 1;
-let speed = 1000; // 掉落毫秒數
 let light = [190, -140, -220, 100]; // 亮度變化
 // ================Button==================
 let Buttons = [];
 let play_bt = new Button({
-    name: 'Start',
+    name: 'Play',
     y: 7 * Gui.span,
     color: 'rgb(222,222,222)',
     bgcolor: 'rgb(55,154,255)',
@@ -429,7 +443,7 @@ let play_bt = new Button({
 play_bt.click = () => {
     start = !start;
     Gui.text = 'S T O P';
-    this.name = (start) ? 'Pause' : 'Start';
+    this.name = (start) ? 'Pause' : 'Play';
     if (start) {
         M_bgm.play();
         if (!draw_player) {
@@ -451,8 +465,13 @@ let Update_bt = new Button({
     }
 });
 Update_bt.click = () => {
-    $('.show:not(#Update)').attr('show', 'false');
-    document.getElementById('Update').setAttribute('show', 'true');
+    let Dom = document.getElementById('Update');
+    if (Dom.getAttribute('show') === 'true')
+        $('.show').attr('show', 'false');
+    else {
+        $('.show:not(#Update)').attr('show', 'false');
+        Dom.setAttribute('show', 'true');
+    }
 }
 let Control_bt = new Button({
     name: 'Control',
@@ -466,8 +485,13 @@ let Control_bt = new Button({
     }
 })
 Control_bt.click = () => {
-    $('.show:not(#Control)').attr('show', 'false');
-    document.getElementById('Control').setAttribute('show', 'true');
+    let Dom = document.getElementById('Control');
+    if (Dom.getAttribute('show') === 'true')
+        $('.show').attr('show', 'false');
+    else {
+        $('.show:not(#Control)').attr('show', 'false');
+        Dom.setAttribute('show', 'true');
+    }
 }
 let Shop_bt = new Button({
     name: 'Shop',
@@ -481,8 +505,13 @@ let Shop_bt = new Button({
     }
 })
 Shop_bt.click = () => {
-    $('.show:not(#Shop)').attr('show', 'false');
-    document.getElementById('Shop').setAttribute('show', 'true');
+    let Dom = document.getElementById('Shop');
+    if (Dom.getAttribute('show') === 'true')
+        $('.show').attr('show', 'false');
+    else {
+        $('.show:not(#Shop)').attr('show', 'false');
+        Dom.setAttribute('show', 'true');
+    }
 }
 Buttons.push(play_bt, Update_bt, Control_bt, Shop_bt);
 // ================Music===================
@@ -490,17 +519,21 @@ let M_bgm = document.createElement('audio');
 M_bgm.src = 'music/bgm.mp3';
 M_bgm.loop = true;
 let M_move = document.createElement('audio');
-M_move.src = 'music/move.wav';
-M_move.volume = 0.05;
+M_move.src = 'music/move.mp3';
 let M_bottom = document.createElement('audio');
-M_bottom.src = 'music/bottom.wav';
-M_bottom.volume = 0.2;
+M_bottom.src = 'music/bottom.mp3';
 let M_dele = new Audio('music/dele.wav');
+let Musics = {
+    'BackGround Music': [M_bgm],
+    'Sound Effect': [M_move, M_bottom, M_dele]
+};
 // ========================================
-
+['BackGround Music', 'Sound Effect'].forEach(Element => {
+    if (localStorage.getItem(Element) === null) localStorage.setItem(Element, 20);
+    $(`[key='${Element}']`).val(localStorage.getItem(Element)).change();
+})
 function init() { // 初始化
     draw_player = false;
-    startime = 0;
     M_bgm.currentTime = 0;
     for (let y = 0; y < Gui.screen.y; y++) {
         map[y] = [];
@@ -564,7 +597,7 @@ function draw() {
         player.move();
         movetime = +new Date();
     }
-    if (now_time - now >= speed - Math.min(900, 6.5 * startime)) { // 更新
+    if (now_time - now >= player.speed) { // 更新
         player.down();
         now = +new Date();
     }
@@ -597,18 +630,5 @@ function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 1) {
         ctx.restore();
     }
 }
-setInterval(e => { if (!start) return; startime++; }, 1000);
 init();
 requestAnimationFrame(draw);
-
-// HTML
-$('input[type=range]').rangeslider({
-    name: 'Master_Volume',
-    polyfill: false,
-    onSlide: (self, val, pos) => {
-        //console.log(pos);
-    },
-    onSlideEnd: (self, val, pos) => {
-        // self.$show[0].style['visibility'] = 'hidden'
-    }
-});

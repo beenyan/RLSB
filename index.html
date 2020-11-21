@@ -13,9 +13,60 @@
 <body>
     <canvas id="canvas"></canvas>
     <div id="content">
-        <top id="top">Version：1.0.0</top>
+        <top id="top">Version：1.1.0</top>
+        <div id="Information">
+            <h1>Information</h1>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">↑</span>
+                </div>
+                <div class="mean">方塊旋轉</div>
+            </div>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">←</span>
+                </div>
+                <div class="mean">方塊左移</div>
+            </div>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">→</span>
+                </div>
+                <div class="mean">方塊右移</div>
+            </div>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">↓</span>
+                </div>
+                <div class="mean">方塊下降</div>
+            </div>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">Shift</span>
+                </div>
+                <div class="mean">方塊切換</div>
+            </div>
+            <div class="control_list">
+                <div class="keyboard">
+                    <span class="keyboard_word">Space</span>
+                </div>
+                <div class="mean">方塊置底</div>
+            </div>
+        </div>
         <div id="Update" class="show">
             <h1>RECENT&nbsp;&nbsp;UPDATES</h1>
+            <div class="update_block">
+                <h2>Update 1.1.0&nbsp;&nbsp;
+                    <min>2020-11-21</min>
+                </h2>
+                <ul>
+                    <li><span>新增遊戲遊玩介面資訊</span></li>
+                    <li><span>新增遊戲更新介面資訊</span></li>
+                    <li><span>新增遊戲控制音效與介面</span></li>
+                    <li><span>修改方塊掉落速度</span></li>
+                    <li><span>修正已知BUG</span></li>
+                </ul>
+            </div>
             <div class="update_block">
                 <h2>Update 1.0.0&nbsp;&nbsp;
                     <min>2020-11-18</min>
@@ -35,21 +86,19 @@
         <div id="Control" class="show">
             <h1>GAME&nbsp;&nbsp;SETTINGS</h1>
             <div class="control_list">
-                <h2 class="key">Master Volume</h2>
-                <input type="range" min="0" max="100">
-            </div>
-            <div class="control_list">
                 <h2 class="key">BackGround Music</h2>
-                <input type="range" min="0" max="100">
+                <input type="range" key="BackGround Music" min="0" max="100">
             </div>
             <div class="control_list">
                 <h2 class="key">Sound Effect</h2>
-                <input type="range" min="0" max="100">
+                <input type="range" key="Sound Effect" min="0" max="100">
             </div>
         </div>
 
         <div id="Shop" class="show">
             <h1>GAME&nbsp;&nbsp;STORES</h1>
+            <div id="coin">Your Coin：0</div>
+            <h1 style="color: red;">此功能尚未放</h1>
         </div>
         <bottom>©
             <span id="year"></span>
