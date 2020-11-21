@@ -426,7 +426,7 @@ let play_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 });
-play_bt.click = function () {
+play_bt.click = () => {
     start = !start;
     Gui.text = 'S T O P';
     this.name = (start) ? 'Pause' : 'Start';
@@ -439,7 +439,7 @@ play_bt.click = function () {
     }
     else M_bgm.pause();
 }
-let inform_bt = new Button({
+let Update_bt = new Button({
     name: 'Update',
     y: 10 * Gui.span,
     color: 'rgb(222,222,222)',
@@ -450,7 +450,10 @@ let inform_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 });
-let set_bt = new Button({
+Update_bt.click = () => {
+    document.getElementById('Update').style.opacity = 1;
+}
+let Control_bt = new Button({
     name: 'Control',
     y: 13 * Gui.span,
     color: 'rgb(222,222,222)',
@@ -461,6 +464,9 @@ let set_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 })
+Control_bt.click = () => {
+    document.getElementById('Control').style.opacity = 1;
+}
 let shop_bt = new Button({
     name: 'Shop',
     y: 16 * Gui.span,
@@ -472,7 +478,7 @@ let shop_bt = new Button({
         color: 'rgb(200,200,200)'
     }
 })
-Buttons.push(play_bt, inform_bt, set_bt, shop_bt);
+Buttons.push(play_bt, Update_bt, Control_bt, shop_bt);
 // ================Music===================
 let M_bgm = document.createElement('audio');
 M_bgm.src = 'music/bgm.mp3';

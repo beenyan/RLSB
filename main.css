@@ -99,14 +99,24 @@ li span {
     left: -5px;
 }
 
+#Update, #Control, #Shop {
+    position: absolute;
+    opacity: 0;
+    transition: 1s;
+}
+
+[show=true] {
+    opacity: 1;
+}
+
 #Update {
-    display: none;
+    /* display: none; */
 }
 
 #Control {}
 
 #Shop {
-    display: none;
+    /* display: none; */
 }
 
 .control_list {
