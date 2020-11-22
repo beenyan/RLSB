@@ -13,48 +13,58 @@
 <body>
     <canvas id="canvas"></canvas>
     <div id="content">
-        <top id="top">Version：1.1.0</top>
+        <top id="top">Version：1.2.0</top>
         <div id="Information">
             <h1>Information</h1>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">↑</span>
                 </div>
-                <div class="mean">方塊旋轉</div>
+                <div class="mean">Block Spin</div>
             </div>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">←</span>
                 </div>
-                <div class="mean">方塊左移</div>
+                <div class="mean">Left Move</div>
             </div>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">→</span>
                 </div>
-                <div class="mean">方塊右移</div>
+                <div class="mean">Right Move</div>
             </div>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">↓</span>
                 </div>
-                <div class="mean">方塊下降</div>
+                <div class="mean">Soft Drop</div>
             </div>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">Shift</span>
                 </div>
-                <div class="mean">方塊切換</div>
+                <div class="mean">Block Hold</div>
             </div>
             <div class="control_list">
                 <div class="keyboard">
                     <span class="keyboard_word">Space</span>
                 </div>
-                <div class="mean">方塊置底</div>
+                <div class="mean">Hard Drop</div>
             </div>
         </div>
+
         <div id="Update" class="show">
             <h1>RECENT&nbsp;&nbsp;UPDATES</h1>
+            <div class="update_block">
+                <h2>Update 1.2.0&nbsp;&nbsp;
+                    <min>未實施</min>
+                </h2>
+                <ul>
+                    <li><span>修改方塊掉落速度</span></li>
+                    <li><span>修改遊戲商城介面資訊</span></li>
+                </ul>
+            </div>
             <div class="update_block">
                 <h2>Update 1.1.0&nbsp;&nbsp;
                     <min>2020-11-21</min>
@@ -97,8 +107,73 @@
 
         <div id="Shop" class="show">
             <h1>GAME&nbsp;&nbsp;STORES</h1>
-            <div id="coin">Your Coin：0</div>
-            <h1 style="color: red;">此功能尚未開放</h1>
+            <div id="coin">My Coin：0</div>
+            <h2>Ability</h2>
+            <div class="skill">
+                <div class="item1">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAA+CAYAAABzwahEAAAACXBIWXMAAFxGAABcRgEUlENBAAAAg0lEQVRoge3ZsRGDMBAAQctDE+RUQuGuxDllQMpQAAr2NlP0utEo+vH/recH9J19gVnY8OV+2PZjvDH0+b1mzGVfvHBN4ZrCNYVrCtcUrilcU7imcE3hmsI1hWtGS0NM4Zq2pZrCNYVrCtcUrilcU7imcE3hmsI1hWsK1xSuaVuqYcMvJNEYlPPWu6wAAAAASUVORK5CYII="
+                        style="background-color: rgba(128, 128, 128, 0.5);" alt="影子磚">
+                </div>
+                <div class="item2">
+                    <span>影子磚</span>
+                </div>
+                <div class="item3">
+                    <span>可以得知方塊掉落位置。</span>
+                </div>
+                <div class="item4">
+                    <div class="button">購買</div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="item1">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8CAYAAACtrX6oAAAACXBIWXMAAFxGAABcRgEUlENBAAACPklEQVR4nO2bMU4bURRF73xbREJUdLQsgEjpKCJFFCjKGqBhCawAWjbABpDYARGiTAMFFpGSKguIlJrmY38PTR4C48FjzcwfdO87pT3jo/ePpvK84uB0Wu59LpCTw5NL7H/8/WswGGT1xhgxHA6h5A2hAM5+lNmkhyeXuLu+QkoJKaVs3hgjYoxy3gAAuSJbXCPX0DasojfYh11Hno1rdD307CGrecPzL7uKXBXX6GroqkNW8obZi9qOvCiu0fbQiw5ZxfsqMNBe5LpxjbaGrnvICt5h1U2hAHaOG0b+WT+ukVLCdDptpF3mkNm9c59ghwcPTI4HJscDk+OByfHA5HhgcjwwOR6YHA9MjgcmxwOT44HJ8cDkeGByKv8PHt3eAN/3mv36xjegWFnqlvF4jMlk0swLoCiWexWY1Tv3CR7d3mB03jAuAPy9AMqH2pe3NSwAlGX9lxWYva8CtxbXqBm5zWGNOofN7n0RuPW4xoLIXQxrvHXYCt6nwJ3FNSoidzmsMe+wVbwByBDXmImcY1jj+dBK3pAtrvE/cs5hjbIs5bxFX9uFn7Z3oeTta5uyt+1CNa/kdqGaV3K7UM0ruV2o5pXcLlTzSm4XqnkltwvVvL5d6DTCA5PjgcnxwOR4YHI8MDkemBwPTI4HJscDk+OByfHA5HhgcjwwOR6YnHe3XajmldouVPNKbReqeaW2C9W8UtuFal6p7UI1bx/bhQNsfD3Kul14/wdY2wQ+rOfdauzZ+2Vr9V/u7UIAeAQ1Qq8hTLvL4AAAAABJRU5ErkJggg=="
+                        alt="影子磚">
+                </div>
+                <div class="item2">
+                    <span>預覽磚</span>
+                </div>
+                <div class="item3">
+                    <span>可以得知下個方塊種類。</span>
+                </div>
+                <div class="item4">
+                    <div class="button">購買</div>
+                </div>
+            </div>
+            <div class="skill">
+                <div class="item1">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8CAYAAACtrX6oAAAACXBIWXMAAFxGAABcRgEUlENBAAABZElEQVR4nO3bO47CQBQF0edP4M17dbOaln8TGTFgg0d0d1BUpSAdWVdE5jXjOP50XRc1SylF3/ehW8FdliUiohqeUoqUUjRNo1vBbSMilmWJfega6J5uebethT8+rG4dt73/sBR+9rC65d328Uu58XcPq1vWfRo4J371YXXLuf0rfF3Xj+H/ppvXPfwFGycHhufA8BwYngPDc2B4DgzPgeE5MDwHhufA8BwYngPDc2B4Dgzv9H3wNE0xz/PHwP5vwqvp5nUPf8G50IiIbdsuf1c3v/s0cE70Ha5b3v0zcAn0Fa5b3r0NXBI9w3XLu20t9AjXLe+2NdF7XLeO2w/D8F3Xdt/mel3Idr0uhLteF8JdrwvhrteFcNfrQrjrdSHc9X0wPAeG58DwHBieA8NzYHgODM+B4TkwPAeG58DwHBieA8NzYHgODM/rQrjrdSHc9boQ7npdCHe9LoS7XhfCXa8L4e4vQ5RHVM0xEXQAAAAASUVORK5CYII="
+                        alt="影子磚">
+                </div>
+                <div class="item2">
+                    <span>保留磚</span>
+                </div>
+                <div class="item3">
+                    <span>可以保留或切換保留區的方塊。</span>
+                </div>
+                <div class="item4">
+                    <div class="button">購買</div>
+                </div>
+            </div>
+            <h2>Skin</h2>
+            <div class="showbox">
+                <div class="showcase">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAFxGAABcRgEUlENBAAAAqElEQVRIie3VsQ3DIBCF4f9wNvEAbOk1mIMW0VExgEexkiJKFDuQRDKcUvDa092nV53EGK/zPKMZ5xxGRFjXVRUNIWAAtPAHCtxhDfwV3cE98SP6BvfAS2gRbonXUIBLbUlE8N6fgmsoVBprZMADHvCABzzg/4Or/zilxLIsp45ba5mmqTgrNm6BAuSc2bbtN7gV+g3fwa3RT/gT7oXWcKOBlnCjhR7xGwkOb2o5JAxgAAAAAElFTkSuQmCC"
+                        alt="方塊1">
+                </div>
+                <div class="showcase">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAFxGAABcRgEUlENBAAAATUlEQVRIie3NMRHAQAgEwCPzThCAS2ygg5ahQ1TSpv2G6tbASne/qopNEYEjIsjM1biq8KyOP4wZM2bMmDFjxowZM2Z878wM3H01NTN8pWMOxU3hLZMAAAAASUVORK5CYII="
+                        alt="方塊2">
+                </div>
+                <div class="showcase">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAFxGAABcRgEUlENBAAAA3ElEQVRIib3PyQ2EMBBE0bI1mThX0iAUJMs3uBAAoSDmMPKIxUt32/S/l57KhBAO5xw0G8cR1hiDbdtUUe89LABo4REF8IM18DN6gd/E7+gDfgNPoUm4J55Ds3APvIQW4Ra8hlZhCU5BSTAHp6JkmIJzUBZcwrkoG07hEhQAPuzFCffei1BA8Di2LAumaZLOZfA8zxiGAeu6Yt93HTiiMSnOgu9oC06Gc6gUJ8E1VIJXYSrKxYswF+XgWViKUvEk3IpS8AfcC63hF7g3WsL/8FtoDrcaaAq3Wugd/wLFG+xF/yejUAAAAABJRU5ErkJggg=="
+                        alt="方塊3">
+                </div>
+                <div class="showcase">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAFxGAABcRgEUlENBAAAA3ElEQVRIib3XOQ4DIQwF0B+SY9BzCW7FBdJScCskjpUUWTTDsNhm+ZUb6+lXlm/e+1cIATvjnIOy1sI5txW11kIBwC78hwL4wDvwI3qCV+I5eoFX4CW0CM/Ea2gVnoG30CY8gvfQLizBKSgJ5uBUlAxTcA7Kgls4F2XDJVyCAsCDvfHFSzMn7MazImocY8TxhktasxvnaAgBMca1cI6O4GS4hkpxEtxDJXgXpqJcvAlzUQ5ehaUoFS/CoygFv8Cz0B5+gmejLfwPr0JruNqBlvC7Mea582lLKUFrjTcFW6VJlFBG/AAAAABJRU5ErkJggg=="
+                        alt="方塊4">
+                </div>
+            </div>
+            <h2>Effect</h2>
         </div>
         <bottom>©
             <span id="year"></span>

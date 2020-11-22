@@ -5,9 +5,7 @@ $('input[type=range]').rangeslider({
     onSlide: (self, val, pos) => {
         let key = self.$element[0].getAttribute('key');
         localStorage.setItem(key, val);
-        Musics[key].forEach(e => {
-            e.volume = val / 100;
-        })
+        Musics[key].forEach(e => e.volume = val / 100);
     }
 });
 
@@ -44,7 +42,8 @@ class Player {
             y: 0,
             x: 0,
             tmpset: 0,
-            speed: 1000
+            speed: 1000,
+            maxspeed: 120
         }
         Object.assign(def, args);
         Object.assign(this, def);
@@ -56,6 +55,7 @@ class Player {
             this.N_block = Block[Rand];
             this.N_blockind = Rand;
         }
+        this.score();
         let Rand = rand(0, 6);
         this.Block = this.N_block;
         this.Blockind = this.N_blockind;
@@ -101,12 +101,12 @@ class Player {
         }
         else this.y++;
         now = +new Date();
-        this.score();
     }
     score() {
         let lines = 0;
         for (let y = Gui.screen.y - 2; y > 0; y--) {
             if (map[y].includes(0)) continue;
+            if (!map[y].filter(x => x % 8 !== 0).length) return;
             for (let y1 = y; y1 > 1; y1--) {
                 map[y1] = map[y1 - 1].slice();
                 map[1] = line.slice();
@@ -115,7 +115,8 @@ class Player {
             } y++;
             lines++;
         }
-        this.speed = Math.max(130, this.speed - lines * 11);
+        if (!lines) return;
+        if (this.speed > this.maxspeed) this.speed = Math.max(this.maxspeed, this.speed * Math.pow(0.975, lines));
         Gui.score += [0, 40, 100, 300, 1200][lines];
     }
     move(y = move.y, x = move.x) {
@@ -632,3 +633,4 @@ function decoration(y = 0, x = 0, color, w = 1, h = 1, sqrt = 1) {
 }
 init();
 requestAnimationFrame(draw);
+Shop_bt.click()
